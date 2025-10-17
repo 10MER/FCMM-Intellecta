@@ -1,14 +1,17 @@
-import { requireAdmin } from "@/lib/auth";
-import { AdminTable } from "@/components/admin/AdminTable";
+"use client";
+import { useEffect } from "react";
 
-export default async function AdminPage() {
-  await requireAdmin();
+export default function AdminPage() {
+  useEffect(() => {
+    // Redirect to the new admin panel
+    window.location.href = '/admin-panel';
+  }, []);
+
   return (
-    <div className="container mx-auto px-6 py-10">
-      <h1 className="text-3xl font-semibold">Admin Console</h1>
-      <p className="text-muted-foreground mt-2">Approve or reject signups and view usage.</p>
-      <div className="mt-8">
-        <AdminTable />
+    <div className="min-h-screen flex items-center justify-center">
+      <div className="text-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto mb-4"></div>
+        <div>Redirecting to admin panel...</div>
       </div>
     </div>
   );
