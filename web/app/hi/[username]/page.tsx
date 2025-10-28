@@ -7,11 +7,9 @@ import { motion } from "framer-motion";
 import { 
   MessageCircle, 
   BookOpen, 
-  Users, 
   Settings, 
   LogOut,
   GraduationCap,
-  Calendar,
   Award,
   Home,
   ArrowRight
@@ -74,20 +72,6 @@ export default function UserPage() {
       description: "Access study materials and guides",
       href: "/resources",
       color: "bg-green-500"
-    },
-    {
-      icon: Users,
-      title: "Community",
-      description: "Connect with fellow students",
-      href: "/community",
-      color: "bg-purple-500"
-    },
-    {
-      icon: Calendar,
-      title: "Events",
-      description: "View upcoming campus events",
-      href: "/events",
-      color: "bg-orange-500"
     }
   ];
 
@@ -115,11 +99,15 @@ export default function UserPage() {
         <div className="container mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
-                <GraduationCap className="w-6 h-6 text-white" />
+            <div className="w-26 h-18 flex items-center justify-center overflow-hidden">
+            <img
+              src="/MasscomLogo.png"
+              alt="Logo"
+              className="w-26 h-26 object-contain"
+            />
               </div>
               <div>
-                <h1 className="text-xl font-bold">Mass Communication Portal</h1>
+                <h1 className="text-xl font-bold">FCMM Intellecta</h1>
                 <p className="text-sm text-muted-foreground">Student Dashboard</p>
               </div>
             </div>
@@ -183,7 +171,7 @@ export default function UserPage() {
           className="mb-8"
         >
           <h3 className="text-xl font-semibold mb-6">Quick Actions</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {quickActions.map((action, index) => {
               const IconComponent = action.icon;
               return (
@@ -212,7 +200,6 @@ export default function UserPage() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.6 }}
-          className="mb-8"
         >
           <h3 className="text-xl font-semibold mb-6">Account</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -250,36 +237,6 @@ export default function UserPage() {
                 </motion.div>
               );
             })}
-          </div>
-        </motion.div>
-
-        {/* Recent Activity */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.6, duration: 0.6 }}
-          className="bg-white dark:bg-slate-800 rounded-2xl p-8 shadow-sm border"
-        >
-          <h3 className="text-xl font-semibold mb-6">Recent Activity</h3>
-          <div className="space-y-4">
-            <div className="flex items-center gap-4 p-4 rounded-lg bg-muted/50">
-              <div className="w-10 h-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
-                <MessageCircle className="w-5 h-5 text-blue-600" />
-              </div>
-              <div>
-                <p className="font-medium">Started a new chat session</p>
-                <p className="text-sm text-muted-foreground">2 hours ago</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-4 p-4 rounded-lg bg-muted/50">
-              <div className="w-10 h-10 rounded-full bg-green-100 dark:bg-green-900 flex items-center justify-center">
-                <BookOpen className="w-5 h-5 text-green-600" />
-              </div>
-              <div>
-                <p className="font-medium">Accessed study materials</p>
-                <p className="text-sm text-muted-foreground">Yesterday</p>
-              </div>
-            </div>
           </div>
         </motion.div>
       </main>
