@@ -68,52 +68,60 @@ export default function Home() {
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-slate-800 dark:to-slate-900">
-      {/* Navigation */}
-      <nav className="border-b bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm sticky top-0 z-50">
-        <div className="container mx-auto px-6 py-4">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
-                <GraduationCap className="w-6 h-6 text-white" />
-              </div>
-              <span className="text-xl font-bold">Mass Communication Portal</span>
-            </div>
-            <div className="flex items-center gap-4">
-              {loading ? (
-                <div className="animate-pulse bg-muted h-10 w-20 rounded-xl"></div>
-              ) : user ? (
-                <div className="flex items-center gap-3">
-                  <div className="text-right">
-                    <p className="text-sm font-medium">Welcome back!</p>
-                    <p className="text-sm text-muted-foreground">{user.email?.split('@')[0]}</p>
-                  </div>
-                  <Link 
-                    href={`/hi/${user.email?.split('@')[0]}`}
-                    className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center gap-2"
-                  >
-                    <UserIcon className="w-4 h-4" />
-                    Dashboard
-                  </Link>
-                  <button
-                    onClick={handleSignOut}
-                    className="p-2 rounded-lg hover:bg-muted transition-colors"
-                    title="Sign out"
-                  >
-                    <LogOut className="w-5 h-5" />
-                  </button>
+    {/* Navigation */}
+    <nav className="border-b bg-white/80 dark:bg-slate-900/80 backdrop-blur-sm sticky top-0 z-50">
+      <div className="container mx-auto px-6 py-4">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            {/* Logo */}
+            <div className="w-26 h-18 flex items-center justify-center overflow-hidden">
+            <img
+              src="/MasscomLogo.png"
+              alt="Logo"
+              className="w-26 h-26 object-contain"
+            />
+          </div>
+            <span className="text-xl font-bold">FCMM Intellecta</span>
+          </div>
+  
+          <div className="flex items-center gap-4">
+            {loading ? (
+              <div className="animate-pulse bg-muted h-10 w-20 rounded-xl"></div>
+            ) : user ? (
+              <div className="flex items-center gap-3">
+                <div className="text-right">
+                  <p className="text-sm font-medium">Welcome back!</p>
+                  <p className="text-sm text-muted-foreground">
+                    {user.email?.split("@")[0]}
+                  </p>
                 </div>
-              ) : (
-                <Link 
-                  href="/login" 
-                  className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+                <Link
+                  href={`/hi/${user.email?.split("@")[0]}`}
+                  className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center gap-2"
                 >
-                  Sign In
+                  <UserIcon className="w-4 h-4" />
+                  Dashboard
                 </Link>
-              )}
-            </div>
+                <button
+                  onClick={handleSignOut}
+                  className="p-2 rounded-lg hover:bg-muted transition-colors"
+                  title="Sign out"
+                >
+                  <LogOut className="w-5 h-5" />
+                </button>
+              </div>
+            ) : (
+              <Link
+                href="/login"
+                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+              >
+                Sign In
+              </Link>
+            )}
           </div>
         </div>
-      </nav>
+      </div>
+    </nav>
 
       {/* Hero Section */}
       <section className="container mx-auto px-6 py-20">
@@ -181,7 +189,7 @@ export default function Home() {
                   href="/login" 
                   className="group inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-purple-600 text-white px-8 py-4 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
                 >
-                  Sign In
+                  TRY IT NOW
                   <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
                 </Link>
               )}
@@ -203,7 +211,7 @@ export default function Home() {
                     <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
                     <div className="w-3 h-3 rounded-full bg-green-500"></div>
                   </div>
-                  <div className="text-sm text-muted-foreground">Mass Communication Portal</div>
+                  <div className="text-sm text-muted-foreground">FCMM Intellecta</div>
                 </div>
                 <div className="aspect-video w-full rounded-2xl bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 flex items-center justify-center border border-border/50">
                   <div className="text-center">
@@ -307,21 +315,17 @@ export default function Home() {
         <div className="container mx-auto px-6 py-12">
           <div className="flex flex-col md:flex-row items-center justify-between gap-6">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
-                <GraduationCap className="w-5 h-5 text-white" />
+            <div className="w-12 h-12 flex items-center justify-center overflow-hidden">
+            <img
+              src="/MasscomLogo.png"
+              alt="Logo"
+              className="w-12 h-12 object-contain"
+            />
               </div>
-              <span className="font-semibold">Mass Communication Portal</span>
-            </div>
-            <div className="flex gap-6 text-sm">
-              <Link href="/terms" className="text-muted-foreground hover:text-foreground transition-colors">
-                Terms of Service
-              </Link>
-              <Link href="/privacy" className="text-muted-foreground hover:text-foreground transition-colors">
-                Privacy Policy
-              </Link>
+              <span className="font-semibold">FCMM Intellecta</span>
             </div>
             <p className="text-sm text-muted-foreground">
-              © {new Date().getFullYear()} All rights reserved.
+              © {new Date().getFullYear()} BUE. All rights reserved.
             </p>
           </div>
         </div>
