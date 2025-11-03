@@ -89,34 +89,42 @@ export default function Home() {
               <div className="animate-pulse bg-muted h-10 w-20 rounded-xl"></div>
             ) : user ? (
               <div className="flex items-center gap-3">
-                <div className="text-right">
-                  <p className="text-sm font-medium">Welcome back!</p>
-                  <p className="text-sm text-muted-foreground">
-                    {user.email?.split("@")[0]}
-                  </p>
-                </div>
-                <Link
-                  href={`/hi/${user.email?.split("@")[0]}`}
-                  className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center gap-2"
-                >
-                  <UserIcon className="w-4 h-4" />
-                  Dashboard
-                </Link>
-                <button
-                  onClick={handleSignOut}
-                  className="p-2 rounded-lg hover:bg-muted transition-colors"
-                  title="Sign out"
-                >
-                  <LogOut className="w-5 h-5" />
-                </button>
+              <div className="text-right">
+                <p className="text-sm font-medium">Welcome back!</p>
+                <p className="text-sm text-muted-foreground">
+                {user.email?.split("@")[0]}
+                </p>
+              </div>
+              <Link
+                href={`/hi/${user.email?.split("@")[0]}`}
+                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl flex items-center gap-2"
+              >
+                <UserIcon className="w-4 h-4" />
+                Dashboard
+              </Link>
+              <button
+                onClick={handleSignOut}
+                className="p-2 rounded-lg hover:bg-muted transition-colors"
+                title="Sign out"
+              >
+                <LogOut className="w-5 h-5" />
+              </button>
               </div>
             ) : (
+              <div className="flex items-center gap-3">
               <Link
                 href="/login"
                 className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
               >
                 Sign In
               </Link>
+              <Link
+                href="/signup"
+                className="bg-gradient-to-r from-blue-600 to-purple-600 text-white px-6 py-2 rounded-xl font-semibold hover:from-blue-700 hover:to-purple-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+              >
+                Sign Up
+              </Link>
+              </div>
             )}
           </div>
         </div>
