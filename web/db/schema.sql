@@ -106,3 +106,28 @@ $$ language plpgsql security definer set search_path = public;
 create trigger enforce_profile_update_restrictions
   before update on public.profiles
   for each row execute function public.enforce_profile_update_restrictions();
+
+-- =========================================================
+-- allowed_emails table (used to whitelist emails/years for signup)
+-- =========================================================
+create table if not exists public.allowed_emails (
+  email text primary key,
+  note text,
+  allowed_year int not null default (date_part('year', now())::int),
+  created_at timestamptz not null default now()
+);
+
+-- Enable Row Level Security and restrict access to service_role only
+alter table public.allowed_emails enable row level security;
+
+-- Revoke public privileges for clarity (clients will be blocked by RLS)
+revoke all on public.allowed_emails from public;
+
+-- Policy: allow only the Supabase service_role to perform any operation
+create policy "service_role_only" on public.allowed_emails
+  for all
+  using (auth.role() = 'service_role')
+  with check (auth.role() = 'service_role');
+
+-- Optional index to speed up queries by year
+create index if not exists idx_allowed_emails_year on public.allowed_emails(allowed_year);
