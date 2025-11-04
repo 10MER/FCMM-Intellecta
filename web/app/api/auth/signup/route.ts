@@ -1,21 +1,19 @@
 import { NextRequest, NextResponse } from "next/server";
-import { createClient as createSupabaseClient } from "@supabase/supabase-js";
+import { createClient } from "@supabase/supabase-js";
 
 type Body = {
   email?: string;
   password?: string;
 };
 
-const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL || process.env.SUPABASE_URL;
-const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 
-if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
-  throw new Error(
-    "Missing SUPABASE_URL or SUPABASE_SERVICE_ROLE_KEY environment variables for server-side signup route"
-  );
+if (!SUPABASE_URL || !SUPABASE_ANON_KEY) {
+  throw new Error("Missing SUPABASE_URL or SUPABASE_ANON_KEY environment variables");
 }
 
-const supabaseAdmin = createSupabaseClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY, {
+const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
   auth: { persistSession: false },
 });
 
@@ -26,13 +24,9 @@ export async function POST(req: NextRequest) {
     const password = body?.password || "";
 
     if (!email || !password) {
-      return NextResponse.json(
-        { error: "Email and password are required" },
-        { status: 400 }
-      );
+      return NextResponse.json({ error: "Email and password are required" }, { status: 400 });
     }
 
-    // basic validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
       return NextResponse.json({ error: "Invalid email format" }, { status: 400 });
@@ -41,9 +35,8 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Password must be at least 8 characters" }, { status: 400 });
     }
 
-    // Check allowed_emails table
-    // Perform a case-insensitive lookup so stored emails with mixed-case match user input
-    const { data: allowedRow, error: allowedError } = await supabaseAdmin
+    // Check if email is allowed (requires that allowed_emails table is publicly readable)
+    const { data: allowedRow, error: allowedError } = await supabase
       .from("allowed_emails")
       .select("email")
       .ilike("email", email)
@@ -57,53 +50,28 @@ export async function POST(req: NextRequest) {
 
     if (!allowedRow) {
       return NextResponse.json(
-        { error: "This email address is not allowed to sign up. If you believe this is an error, contact support." },
+        { error: "This email is not allowed to sign up" },
         { status: 403 }
       );
     }
 
-    // Create user with service role (admin)
-    // Use admin.createUser when available; cast to any to avoid type mismatches across supabase-js versions
-    const { data: createData, error: createError } = await (supabaseAdmin.auth as any).admin.createUser({
+    // Create user using public signup method
+    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
       email,
       password,
-      email_confirm: false,
-      user_metadata: {},
     });
 
-    if (createError) {
-      console.error("Error creating Supabase user:", createError);
-      // common case: user already exists
-      const status = createError.status === 400 ? 409 : createError.status || 500;
-      return NextResponse.json({ error: createError.message || "Failed to create user" }, { status });
+    if (signUpError) {
+      console.error("Error during signup:", signUpError);
+      return NextResponse.json({ error: signUpError.message }, { status: 400 });
     }
 
-    const createdUser = (createData as any)?.user ?? null;
-    if (!createdUser || !createdUser.id) {
-      console.error("createUser returned unexpected response:", createData);
-      return NextResponse.json({ error: "Failed to create user" }, { status: 500 });
-    }
-
-    // Upsert a profiles row for the app
-    const { error: upsertError } = await supabaseAdmin.from("profiles").upsert({
-      id: createdUser.id,
-      email,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
-    });
-
-    if (upsertError) {
-      console.error("Error upserting profile:", upsertError);
-      // Not fatal; still return created but include warning
-      return NextResponse.json(
-        { message: "User created", userId: createdUser.id, warning: "Failed to upsert profile row" },
-        { status: 201 }
-      );
-    }
-
-    return NextResponse.json({ message: "User created", userId: createdUser.id }, { status: 201 });
+    return NextResponse.json(
+      { message: "Signup successful. Check your email for confirmation.", user: signUpData?.user },
+      { status: 201 }
+    );
   } catch (err: any) {
     console.error("Unexpected signup error:", err);
-    return NextResponse.json({ error: err?.message ?? "Unexpected server error" }, { status: 500 });
+    return NextResponse.json({ error: err?.message ?? "Unexpected error" }, { status: 500 });
   }
 }
